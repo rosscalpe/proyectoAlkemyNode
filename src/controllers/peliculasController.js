@@ -32,9 +32,11 @@ const peliculasController = {
         db.Peliculas.findAll({
             include: ['personajes', 'generos'],
             where: { 
-                titulo: {[Op.like]: '%' + req.query.keyword + '%'}, 
-              //  genero: {[Op.like]: req.query}, 
-            }
+                titulo: {[Op.like]: '%' + req.query.keyword + '%'}
+            },
+            order: [
+                ['fecha_creacion', 'DESC']
+            ]
         })
         .then((pelicula) => {
             return res.status(200).json({

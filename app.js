@@ -2,6 +2,7 @@ const express = require('express');
 const methodOverride = require('method-override');
 const session = require('express-session');
 const cookies = require('cookie-parser');
+const port = 3000;
 
 const app = express();
 
@@ -26,6 +27,6 @@ app.use ('/characters', personajesRouter);
 app.use ('/movies', peliculasRouter);
 
 
-app.listen (3000, () => {
-    console.log('servidor corriendo, Host 3000')
+app.listen (port, () => {
+     console.log(`servidor corriendo, Host ${ port }`)
 })

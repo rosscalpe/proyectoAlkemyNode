@@ -33,7 +33,7 @@ const personajesController = {
             include: ['peliculas'],
             where: { 
                 nombre: {[Op.like]: '%' + req.query.keyword + '%'}, 
-                edad: {[Op.like]: '%' + req.query.keyword + '%'},
+            //    edad: {[Op.like]: '%' + req.query.keyword + '%'},
             //    movie: {[Op.like]: '%' + req.query.keyword + '%'}  
             }
         })
