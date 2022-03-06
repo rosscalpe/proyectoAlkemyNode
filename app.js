@@ -1,7 +1,5 @@
 const express = require('express');
-const methodOverride = require('method-override');
-const session = require('express-session');
-const cookies = require('cookie-parser');
+
 const port = 3000;
 
 const app = express();
@@ -11,21 +9,18 @@ const loginRouter = require('./src/routes/loginRoutes');
 const peliculasRouter = require('./src/routes/peliculasRoutes');
 
 
-app.use(express.static('public'));
-app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: false }));
-app.use(session({
-    secret: "It's secret",
-    resave: false,
-    saveUninitialized: false
-}));
-app.use(cookies());
-
+app.use(express.json());
 
 app.use ('/auth', loginRouter);
 app.use ('/characters', personajesRouter);
 app.use ('/movies', peliculasRouter);
-
+app.use("/*", (req, res) => {
+    res.status(404).json({ 
+      status:404,
+      error: "Not found page"
+    });
+  });
 
 app.listen (port, () => {
      console.log(`servidor corriendo, Host ${ port }`)

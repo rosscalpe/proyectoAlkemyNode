@@ -1,5 +1,6 @@
 const db = require('../database/models');
 const { Op } = require("sequelize");
+const { validationResult } = require("express-validator");
 
 const peliculasController = {
     list: (req, res) => {
@@ -19,7 +20,7 @@ const peliculasController = {
     detail: (req, res) => {
         let id = req.params.id
         db.Peliculas.findByPk(id, {
-            include: ['personajes']
+            include: ['personajes', 'generos']
         })
         .then(pelicula => {
             return res.status(200).json({
@@ -32,7 +33,8 @@ const peliculasController = {
         db.Peliculas.findAll({
             include: ['personajes', 'generos'],
             where: { 
-                titulo: {[Op.like]: '%' + req.query.keyword + '%'}
+                titulo: {[Op.like]: '%' + req.query.keyword + '%'},
+                genero_id: generos
             },
             order: [
                 ['fecha_creacion', 'DESC']
@@ -48,11 +50,29 @@ const peliculasController = {
         .catch(e => console.log(e))
     },
     create: (req, res) => {
+        const { imagen, titulo, fecha_creacion, calificacion, genero_id } = req.body;
+        
+        const errores = validationResult(req);
+
+        if (errores.errors.length) {
+            return res.status(404).json({
+              meta: {
+                status: 404,
+                ok: false,
+              },
+              errors: errores.mapped(),
+            });
+          }
+
         db.Peliculas.create({
-            ...req.body
+            imagen, titulo, fecha_creacion, calificacion, genero_id
         })
         .then((pelicula) => {
             return res.status(200).json({
+                meta: {
+                    status: 200,
+                    ok: true
+                },
                 data: pelicula
             })
             .catch(e => console.log(e))
@@ -60,13 +80,33 @@ const peliculasController = {
     },
     update: (req, res) => {
         let id = req.params.id
+
+        const { imagen, titulo, fecha_creacion, calificacion, genero_id } = req.body;
+        
+        const errores = validationResult(req);
+
+        if (errores.errors.length) {
+            return res.status(404).json({
+              meta: {
+                status: 404,
+                ok: false,
+              },
+              errors: errores.mapped(),
+            });
+          }
+          const pelicula = await db.Peliculas.findByPk(id)
+
         db.Peliculas.update({
-            ...req.body
+            imagen: imagen || pelicula.imagen, titulo, fecha_creacion, calificacion, genero_id
         }, {
             where: { id }
         })
         .then(pelicula => {
             return res.status(200).json ({
+                meta:{
+                    status: 200,
+                    ok: true
+                },
                 data: pelicula
             })
         })

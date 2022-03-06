@@ -1,16 +1,20 @@
 const db = require('../database/models');
 const { Op } = require("sequelize");
+const { validationResult } = require("express-validator")
 
 const personajesController = {
     list: (req, res) => {
-        db.Personajes.findAll()
+        db.Personajes.findAll({
+            include: ['peliculas']
+        })
         .then (personaje => {
             return res.status(200).json({
-                meta: personaje.length,
+                meta: {
+                    total: personaje.length,
+                    status: 200},
                 data: personaje.forEach(p => {
                         p.imagen,
-                        p.nombre 
-                    
+                        p.nombre     
                 }) 
             })
         })
@@ -46,26 +50,59 @@ const personajesController = {
         .catch(e => console.log(e))
     },
     create: (req, res) => {
+        const { imagen, nombre, edad, peso, historia } = req.body;
+
+        const errores = validationResult(req);
+
+        if (errores.errors.length) {
+            return res.status(404).json({
+              meta: {
+                status: 404,
+                ok: false,
+              },
+              errors: errores.mapped(),
+            });
+          }
+
         db.Personajes.create({
-            ...req.body
+            imagen, nombre, edad, peso, historia
         })
         .then((personaje) => {
             return res.status(200).json({
-                data: personaje
+                data: personaje,
+                status: 200
             })
             .catch(e => console.log(e))
         })
     },
     update: (req, res) => {
-        let id = req.params.id
+        let id = req.params.id;
+
+        const { imagen, nombre, edad, peso, historia } = req.body;
+
+        const errores = validationResult(req);
+
+        if (errores.errors.length) {
+            return res.status(404).json({
+              meta: {
+                status: 404,
+                ok: false,
+              },
+              errors: errores.mapped(),
+            });
+          }
+        const personaje = await db.Personajes.findByPk(id);
+
         db.Personajes.update({
-            ...req.body
+            imagen: imagen || personaje.imagen, nombre, edad, peso, historia
         }, {
             where: { id }
         })
         .then(personaje => {
             return res.status(200).json ({
-                data: personaje
+                data: personaje,
+                status: 200,
+                ok: true
             })
         })
     },
@@ -80,7 +117,6 @@ const personajesController = {
         })
         .catch(e => console.log(e))
     }
-
 }
 
 
