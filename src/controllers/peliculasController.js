@@ -8,11 +8,7 @@ const peliculasController = {
         .then (pelicula => {
             return res.status(200).json({
                 meta: pelicula.length,
-                data: pelicula.forEach(p => {
-                        p.imagen,
-                        p.titulo, 
-                        p.fecha_creacion 
-                }) 
+                data: pelicula
             })
         })
         .catch(e => console.log(e))
@@ -20,21 +16,20 @@ const peliculasController = {
     detail: (req, res) => {
         let id = req.params.id
         db.Peliculas.findByPk(id, {
-            include: ['personajes', 'generos']
+            include: ['personajes', 'genero']
         })
         .then(pelicula => {
             return res.status(200).json({
-                data: pelicula,
-                peliculas: pelicula.personajes.forEach(p => p.titulo)
+                data: pelicula
             })
         })
     },
     search: (req, res) => {
         db.Peliculas.findAll({
-            include: ['personajes', 'generos'],
+            include: ['personajes', 'genero'],
             where: { 
                 titulo: {[Op.like]: '%' + req.query.keyword + '%'},
-                genero_id: generos
+                genero_id: genero
             },
             order: [
                 ['fecha_creacion', 'DESC']
@@ -43,8 +38,7 @@ const peliculasController = {
         .then((pelicula) => {
             return res.status(200).json({
                 data: pelicula,
-                personajes: pelicula.personajes,
-                genero: pelicula.generos
+                ok: true
             })
         })
         .catch(e => console.log(e))
@@ -94,7 +88,7 @@ const peliculasController = {
               errors: errores.mapped(),
             });
           }
-          const pelicula = await db.Peliculas.findByPk(id)
+          const pelicula = db.Peliculas.findByPk(id)
 
         db.Peliculas.update({
             imagen: imagen || pelicula.imagen, titulo, fecha_creacion, calificacion, genero_id

@@ -11,11 +11,13 @@ const personajesController = {
             return res.status(200).json({
                 meta: {
                     total: personaje.length,
-                    status: 200},
-                data: personaje.forEach(p => {
-                        p.imagen,
-                        p.nombre     
-                }) 
+                    status: 200
+                },
+                data: personaje
+                // .forEach(p => {
+                //         p.imagen,
+                //         p.nombre     
+                // }) 
             })
         })
         .catch(e => console.log(e))
@@ -27,8 +29,7 @@ const personajesController = {
         })
         .then(personaje => {
             return res.status(200).json({
-                data: personaje,
-                peliculas: personaje.peliculas.forEach(p => p.titulo)
+                data: personaje
             })
         })
     },
@@ -91,7 +92,7 @@ const personajesController = {
               errors: errores.mapped(),
             });
           }
-        const personaje = await db.Personajes.findByPk(id);
+        const personaje = db.Personajes.findByPk(id);
 
         db.Personajes.update({
             imagen: imagen || personaje.imagen, nombre, edad, peso, historia

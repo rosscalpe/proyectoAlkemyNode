@@ -1,5 +1,5 @@
 const db = require("../database/models");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jtk = require("jsonwebtoken");
 const { transport } = require("../mailer/mailer")
 const { validationResult } = require("express-validator");
@@ -33,7 +33,7 @@ const loginController = {
                 })
             });
 
-            await transport.mailer({
+            transport.mailer({
                 from: "<rossmycalderon@hotmail.com>",
                 to: email,
                 subject: "Se registró exitosamente"
