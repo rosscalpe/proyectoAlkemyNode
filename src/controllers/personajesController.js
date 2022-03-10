@@ -5,7 +5,7 @@ const { validationResult } = require("express-validator")
 const personajesController = {
     list: (req, res) => {
         db.Personajes.findAll({
-            include: ['peliculas']
+            attributes: ['imagen', 'nombre']
         })
         .then (personaje => {
             return res.status(200).json({
@@ -14,10 +14,6 @@ const personajesController = {
                     status: 200
                 },
                 data: personaje
-                // .forEach(p => {
-                //         p.imagen,
-                //         p.nombre     
-                // }) 
             })
         })
         .catch(e => console.log(e))

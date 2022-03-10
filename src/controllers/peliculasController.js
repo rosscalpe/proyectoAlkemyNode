@@ -4,11 +4,17 @@ const { validationResult } = require("express-validator");
 
 const peliculasController = {
     list: (req, res) => {
-        db.Peliculas.findAll()
+        db.Peliculas.findAll({
+            attributes: ['imagen', 'titulo', 'fecha_creacion']
+        })
         .then (pelicula => {
             return res.status(200).json({
-                meta: pelicula.length,
-                data: pelicula
+                meta: {
+                    long: pelicula.length,
+                    status: 200,
+                    ok: true
+                },
+                data: pelicula,
             })
         })
         .catch(e => console.log(e))

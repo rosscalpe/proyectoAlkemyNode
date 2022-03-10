@@ -33,12 +33,12 @@ const loginController = {
                 })
             });
 
-            transport.mailer({
-                from: "<rossmycalderon@hotmail.com>",
-                to: email,
-                subject: "Se registró exitosamente"
-            })
-            .catch(e => console.log(e))
+            // transport.mailer({
+            //     from: "<rossmycalderon@hotmail.com>",
+            //     to: email,
+            //     subject: "Se registró exitosamente"
+            // })
+            // .catch(e => console.log(e))
         }
     },
     login: (req, res) => {
@@ -58,15 +58,15 @@ const loginController = {
             where: { email: req.body.email }
         });
 
-        const token = jtk.sign({
-            id: usuario.id,
-            usuario: usuario.email
-        }, process.env.TOKEN_SECRET);
+        // const token = jtk.sign({
+        //     id: usuario.id,
+        //     usuario: usuario.email
+        // }, process.env.TOKEN_SECRET);
 
-        return res.header("token-autenticacion", token).json({
-            data: { token },
-            ok: true
-        })
+        // return res.header("token-autenticacion", token).json({
+        //     data: { token },
+        //     ok: true
+        // })
     }
 
 }
