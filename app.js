@@ -1,13 +1,10 @@
 const express = require('express');
-
 const port = 3000;
-
 const app = express();
 
 const personajesRouter = require('./src/routes/personajesRoutes');
 const loginRouter = require('./src/routes/loginRoutes');
 const peliculasRouter = require('./src/routes/peliculasRoutes');
-
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

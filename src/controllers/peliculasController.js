@@ -31,10 +31,11 @@ const peliculasController = {
         })
     },
     search: (req, res) => {
+        let searchUser = req.query
         db.Peliculas.findAll({
             include: ['personajes', 'genero'],
             where: { 
-                titulo: {[Op.like]: '%' + req.query.keyword + '%'},
+                titulo: {[Op.like]: '%' + searchUser + '%'},
                 genero_id: genero
             },
             order: [
