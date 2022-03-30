@@ -11,7 +11,8 @@ const personajesController = {
             return res.status(200).json({
                 meta: {
                     total: personaje.length,
-                    status: 200
+                    status: 200,
+                    url: "http://localhost:3000/characters"
                 },
                 data: personaje
             })
@@ -25,7 +26,8 @@ const personajesController = {
         })
         .then(personaje => {
             return res.status(200).json({
-                data: personaje
+                data: personaje,
+                url: "http://localhost:3000/characters/:id"
             })
         })
     },
@@ -33,13 +35,18 @@ const personajesController = {
         db.Personajes.findAll({
             include: ['peliculas'],
             where: { 
-                nombre: {[Op.like]: '%' + req.query.keyword + '%'}, 
-            //    edad: {[Op.like]: '%' + req.query.keyword + '%'},
-            //    movie: {[Op.like]: '%' + req.query.keyword + '%'}  
+                nombre: {[Op.like]: '%' + req.query + '%'}, 
+                edad: {[Op.like]: '%' + req.query + '%'},
+                movie: {[Op.like]: '%' + req.query + '%'}  
             }
         })
         .then((personaje) => {
             return res.status(200).json({
+                meta:{
+                    total: personaje.length,
+                    status: 200,
+                    url: "http://localhost:3000/characters/search?"
+                },
                 data: personaje,
                 pelicula: personaje.peliculas,
             })
@@ -66,8 +73,12 @@ const personajesController = {
         })
         .then((personaje) => {
             return res.status(200).json({
+                meta: {
+                    status: 200,
+                    ok: true,
+                    url: "http://localhost:3000/characters/create"
+                },
                 data: personaje,
-                status: 200
             })
             .catch(e => console.log(e))
         })
@@ -97,9 +108,12 @@ const personajesController = {
         })
         .then(personaje => {
             return res.status(200).json ({
-                data: personaje,
-                status: 200,
-                ok: true
+                meta: {
+                    status: 200,
+                    ok: true,
+                    url: "http://localhost:3000/characters/edit/:id"
+                },
+                data: personaje
             })
         })
     },
@@ -109,6 +123,11 @@ const personajesController = {
         })
         .then(personaje => {
             return res.status(200).json({
+                meta: {
+                    status: 200,
+                    ok: true,
+                    url: "http://localhost:3000/characters/delete/:id"
+                },
                 data: personaje
             })
         })

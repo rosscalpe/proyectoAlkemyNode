@@ -12,7 +12,8 @@ const peliculasController = {
                 meta: {
                     long: pelicula.length,
                     status: 200,
-                    ok: true
+                    ok: true,
+                    url: "http://localhost:3000/movies"
                 },
                 data: pelicula,
             })
@@ -26,16 +27,17 @@ const peliculasController = {
         })
         .then(pelicula => {
             return res.status(200).json({
-                data: pelicula
+                data: pelicula,
+                url: "http://localhost:3000/movies/:id"
             })
         })
     },
     search: (req, res) => {
-        let searchUser = req.query
+        let searchMovie = req.query
         db.Peliculas.findAll({
             include: ['personajes', 'genero'],
             where: { 
-                titulo: {[Op.like]: '%' + searchUser + '%'},
+                titulo: {[Op.like]: '%' + searchMovie + '%'},
                 genero_id: genero
             },
             order: [
@@ -45,7 +47,8 @@ const peliculasController = {
         .then((pelicula) => {
             return res.status(200).json({
                 data: pelicula,
-                ok: true
+                ok: true,
+                url: "http://localhost:3000/movies/search?"
             })
         })
         .catch(e => console.log(e))
@@ -72,7 +75,8 @@ const peliculasController = {
             return res.status(200).json({
                 meta: {
                     status: 200,
-                    ok: true
+                    ok: true,
+                    url: "http://localhost:3000/movies/create"
                 },
                 data: pelicula
             })
@@ -106,7 +110,8 @@ const peliculasController = {
             return res.status(200).json ({
                 meta:{
                     status: 200,
-                    ok: true
+                    ok: true,
+                    url: "http://localhost:3000/movies/edit/:id"
                 },
                 data: pelicula
             })
@@ -118,7 +123,8 @@ const peliculasController = {
         })
         .then(pelicula => {
             return res.status(200).json({
-                data: pelicula
+                data: pelicula,
+                url: "http://localhost:3000/movies/delete/:id"
             })
         })
         .catch(e => console.log(e))

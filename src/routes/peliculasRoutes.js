@@ -8,7 +8,7 @@ const validacionPeliculaEdit = require('../validations/validacionModificarPelicu
 //peliculas
 router.get('/', controller.list);
 router.get('/:id', controller.detail);
-router.get('/search', controller.search);
+router.get('/search?', controller.search);
 //CRUD
 router.post('/create', validacionPelicula, controller.create);
 router.put('/edit/:id', validacionPeliculaEdit, controller.update);

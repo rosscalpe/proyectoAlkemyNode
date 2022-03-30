@@ -19,7 +19,7 @@ const loginController = {
             })
         } else {
             db.Usuarios.create({
-                email,
+                email: email,
                 contraseña: bcrypt.hashSync(contraseña, 12)
             })
             .then(usuario => {
@@ -27,11 +27,12 @@ const loginController = {
                     meta: {
                         status: 200,
                         ok: true,
-                        msg: "usuario creado"
+                        msg: "usuario creado",
+                        url: "http://localhost:3000/auth/register"
                     },
                     data: usuario
                 })
-            });
+            }).catch(e => console.log(e))
 
             // transport.mailer({
             //     from: "<rossmycalderon@hotmail.com>",
@@ -53,20 +54,41 @@ const loginController = {
                 errors: errores.mapped()
             })
         }    
-
         const usuario = db.Usuarios.findOne({
             where: { email: req.body.email }
         });
-
-        // const token = jtk.sign({
-        //     id: usuario.id,
-        //     usuario: usuario.email
-        // }, process.env.TOKEN_SECRET);
-
-        // return res.header("token-autenticacion", token).json({
-        //     data: { token },
-        //     ok: true
-        // })
+        if(usuario){
+            let checkPassword = bcrypt.compare(req.body.contraseña, usuario.contraseña);
+            if(checkPassword){
+                let token = jtk.sign({
+                    id: usuario.id,
+                    email: usuario.email
+                }, "secret", { expiresIn: "1h" });
+                res.status(200).json({
+                    meta: {
+                        status: 200,
+                        ok: true,
+                        msg: "usuario logueado",
+                        url: "http://localhost:3000/auth/login" 
+                    },
+                    data: {
+                        token,
+                        usuario
+                    }
+                })
+            }else{
+                return res.status(404).json({
+                    status: 404,
+                    errors:  'credenciales inválidas',
+                    ok: false
+                })
+            }
+        }
+        return res.status(404).json({
+            status: 404,
+            errors:  'Este mail no se encuentra registrado',
+            ok: false
+        })
     }
 
 }

@@ -8,7 +8,7 @@ const validacionPersonajeEdit = require('../validations/ValidacionModificarPerso
 //personajes
 router.get('/', controller.list);
 router.get('/:id', controller.detail);
-router.get('/?', controller.search)
+router.get('/search?', controller.search)
 //CRUD
 router.post('/create', validacionPersonajes, controller.create);
 router.put('/edit/:id', validacionPersonajeEdit, controller.update);
